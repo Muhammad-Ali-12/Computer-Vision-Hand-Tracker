@@ -10,9 +10,7 @@ import keyboard
 import pyautogui 
 
 screen_width, screen_height = pyautogui.size()
-#pyautogui.FAILSAFE = False
 pyautogui.PAUSE = 0
-#print(screen_width,"x",screen_height) - 1980 x 1080
 
 device = AudioUtilities.GetSpeakers()
 Volume = device.EndpointVolume
@@ -22,10 +20,7 @@ HandLandmarker = mp.tasks.vision.HandLandmarker
 HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
 VisionRunningMode = mp.tasks.vision.RunningMode
 
-model_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "hand_landmarker.task"
-)
+model_path = "hand_landmarker.task"
 
 options = HandLandmarkerOptions(
     base_options=BaseOptions(model_asset_path=model_path),
@@ -40,7 +35,6 @@ detector = HandLandmarker.create_from_options(options)
 
 cap = cv2.VideoCapture(1)
 
-# mode 1 = volume, 2 = brightness, 3 = air mouse 
 mode = 1
 
 frame_timestamp = 0
@@ -83,17 +77,13 @@ while True:
         frame_timestamp
     )
 
-    
-
     if results.hand_landmarks:
         for hand_landmarks in results.hand_landmarks:
 
             for connection in mp.tasks.vision.HandLandmarksConnections.HAND_CONNECTIONS:
-                # visualizing the hand tracker i.e drawing the landmark connections
                 start = hand_landmarks[connection.start]
                 end = hand_landmarks[connection.end]
 
-                # converting the normalized coordinates into x and y values
                 h, w, c = img.shape
 
                 x1 = int(start.x * w)
@@ -114,8 +104,6 @@ while True:
             index_x, index_y = 0, 0
 
             for id, lm in enumerate(hand_landmarks):
-                # drawing the landmarks
-
                 h, w, c = img.shape
 
                 cx = int(lm.x * w)
@@ -129,7 +117,6 @@ while True:
                     cv2.FILLED
                 )
 
-                # fingers tracker
                 fingers_up = 0
 
                 if hand_landmarks[8].y < hand_landmarks[6].y:
@@ -144,7 +131,6 @@ while True:
                 if hand_landmarks[20].y < hand_landmarks[18].y:
                     fingers_up += 1
 
-                # Landmark 4 = thumb tip, Landmark 8 = Index finger tip
                 if id == 4:
                     thumb_x, thumb_y = cx, cy
                 elif id == 8:
@@ -167,7 +153,6 @@ while True:
                 cv2.circle(img, (index_x, index_y), 15, (255, 0, 255), cv2.FILLED)
                 cv2.line(img,(thumb_x, thumb_y),(index_x, index_y),(255, 0, 255),3)
                 
-                # d = √((x2 - x1)² + (y2 - y1)²)
                 distance = math.sqrt((index_x - thumb_x)**2 + (index_y - thumb_y)**2)
                 value = (distance - 25) / (200 - 25) * 100
                 value = max(0, min(100, value))
@@ -176,11 +161,7 @@ while True:
                     smooth_volume = 100
                 elif value <= 0:
                     smooth_volume = 0
-                
-                #print(volume)
-                #Volume.SetMasterVolumeLevel(-20.0, None)
-    
-                # new smooth value = old smooth value × 0.8 + new measurement × 0.2
+
                 smooth_volume = (smooth_volume * (1 - 0.3) + value * 0.3)
 
                 if mode == 1: 
@@ -226,13 +207,11 @@ while True:
             else:
                 cv2.circle(img, (index_x, index_y), 15, (255, 0, 255), cv2.FILLED)
 
-                # Move the mouse using the index finger
                 pyautogui.moveTo(
                     int(smooth_mouse_x),
                     int(smooth_mouse_y)
                 )
 
-                # Remove finger = left click, Add finger = right click
                 if fingers_up != previous_fingers:
                     if fingers_up == 1:
                         print("LEFT CLICK")
