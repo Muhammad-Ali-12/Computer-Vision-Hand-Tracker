@@ -8,7 +8,12 @@ GestureOS is a computer vision based project built with OpenCV and MediaPipe. It
 - 🎚️ **Volume Control** — pinch your thumb and index finger to adjust system volume
 - ☀️ **Brightness Control** — same pinch gesture, applied to screen brightness
 - 🖱️ **Air Mouse** — move your index finger to move the cursor, use finger counts to click
-*(more currently in development)*
+
+*Currently in development*
+- 🔒 **Hand Lock Authentication** — Lock Gesture OS to your hand so only you can control it.
+- 👆 **Swiping** — Swiping functionality for presentation/slideshows etc.
+- 🖱️ **User Trainable Gestures** — Allowing users to train their own gestures for different functions.
+- 💻 **Cross-Platform Support/Modular SDK** - Make Gesture OS into a lightweight modular SDK for all platforms like MacOS,Linux,Phone/Tablet,Arduino etc.
 
 ## How It Works
 
