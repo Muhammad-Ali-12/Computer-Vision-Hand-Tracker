@@ -193,7 +193,7 @@ def is_thumbs_up(landmarks):
 
 
 def is_lock_gesture(landmarks):
-    """Index and pinky extended; middle and ring curled (the horns sign)."""
+    """pinky extended locks the program"""
     if not landmarks or len(landmarks) < 21:
         return False
 
@@ -207,7 +207,7 @@ def is_lock_gesture(landmarks):
         return tip_distance > pip_distance * 1.14
 
     return (
-        not finger_extended(8, 6)         # Index raised
+        not finger_extended(8, 6)         # Index folded
         and not finger_extended(12, 10)  # Middle folded
         and not finger_extended(16, 14)  # Ring folded
         and finger_extended(20, 18)   # Pinky raised
